@@ -1,59 +1,123 @@
-# RoutingApp
+# 🚀 Rotas com Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+Este é um pequeno tutorial sobre como gerenciar **rotas** no framework Angular.
 
-## Development server
+---
 
-To start a local development server, run:
+## 📌 Criando o Projeto
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Crie um novo projeto Angular com o comando:
 
 ```bash
-ng generate component component-name
+ng new routing-app
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
+
+## 📌 Criando os Componentes
+
+Agora, crie os componentes que serão usados nas rotas:
 
 ```bash
-ng generate --help
+ng g c first
+ng g c second
 ```
 
-## Building
+---
 
-To build the project run:
+## 📌 Importando as Bibliotecas Necessárias
+
+No arquivo **`app.component.ts`**, importe **RouterLink**, **RouterLinkActive** e **RouterOutlet**:
+
+```typescript
+import { Component } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
+export class AppComponent {
+  title = 'routing-app';
+}
+```
+
+---
+
+## 📌 Definindo as Rotas
+
+### 🔹 Importando os Componentes
+
+No arquivo **`app.routes.ts`**, importe os componentes criados:
+
+```typescript
+import { FirstComponent } from './first/first.component';
+import { SecondComponent } from './second/second.component';
+```
+
+### 🔹 Configurando as Rotas
+
+No arquivo **`app.config.ts`**, defina a configuração das rotas:
+
+```typescript
+export const appConfig: ApplicationConfig = {
+  providers: [providerRouter(routes)]
+};
+```
+
+Agora, no arquivo **`app.routes.ts`**, defina as rotas:
+
+```typescript
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  { path: 'first', component: FirstComponent },
+  { path: 'second', component: SecondComponent },
+  // Redireciona para a primeira rota caso a URL esteja vazia
+  { path: '', redirectTo: '/first', pathMatch: 'full' },
+  // Caso a rota especificada não seja encontrada
+  { path: '**', component: NotfoundpageComponent },
+];
+```
+
+---
+
+## 📌 Adicionando as Rotas na Interface
+
+No arquivo **`app.component.html`**, adicione um menu de navegação para acessar as rotas:
+
+```html
+<h1>Angular Router App</h1>
+<nav>
+  <ul>
+    <li><a routerLink="/first" routerLinkActive="active" ariaCurrentWhenActive="page">First Component</a></li>
+    <li><a routerLink="/second" routerLinkActive="active" ariaCurrentWhenActive="page">Second Component</a></li>
+    <li><a routerLink="aaa" routerLinkActive="active" ariaCurrentWhenActive="page">Teste</a></li>
+  </ul>
+</nav>
+
+<!-- Onde o conteúdo da rota será carregado -->
+<div id="routes">
+  <router-outlet></router-outlet>
+</div>
+```
+
+---
+
+## 🎯 Executando o Projeto
+
+Para testar as rotas, execute o seguinte comando no terminal:
 
 ```bash
-ng build
+ng serve --open
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Agora, acesse:
+- **`http://localhost:4200/first`** → Para ver o **FirstComponent**
+- **`http://localhost:4200/second`** → Para ver o **SecondComponent**
 
-## Running unit tests
+Caso digite uma rota inválida, será redirecionado para o componente **NotfoundpageComponent**.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
